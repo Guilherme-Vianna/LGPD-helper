@@ -47,7 +47,6 @@ public class PDF {
        }
         pdfDoc.close();
     }
-    
     public static void DetectCpf() throws FileNotFoundException, IOException 
     {
        PdfReader pdf = new PdfReader("F:\\Documento.pdf");
@@ -77,7 +76,6 @@ public class PDF {
         }
         }
     }
-    
     public static boolean isValidCPF(String cpf) {
         if (cpf == null || cpf.length() != 11) {
             return false;

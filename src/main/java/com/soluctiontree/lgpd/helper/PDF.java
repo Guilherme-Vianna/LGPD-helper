@@ -4,18 +4,33 @@
  */
 package com.soluctiontree.lgpd.helper;
 
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfReader;
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.kernel.pdf.canvas.parser.PdfCanvasProcessor;
 import com.itextpdf.kernel.pdf.canvas.parser.PdfTextExtractor;
-import com.itextpdf.kernel.pdf.canvas.parser.listener.LocationTextExtractionStrategy;
 import com.itextpdf.layout.Document;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.itextpdf.kernel.pdf.PdfName;
+
+import com.itextpdf.io.font.PdfEncodings;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfPage;
+import com.itextpdf.kernel.pdf.PdfReader;
+import com.itextpdf.kernel.pdf.PdfStream;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.pdf.canvas.parser.PdfCanvasProcessor;
+import com.itextpdf.kernel.pdf.canvas.parser.listener.LocationTextExtractionStrategy;
+import java.io.IOException;
+
+import com.itextpdf.kernel.pdf.*;
+import com.itextpdf.kernel.pdf.canvas.parser.PdfTextExtractor;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.AreaBreak;
+import com.itextpdf.layout.element.Paragraph;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  *
@@ -75,7 +90,40 @@ public class PDF {
             }
         }
         }
+        
+        String inputFilePath = "F:\\documento.pdf"; // Replace with your input PDF file path
+        String outputFilePath = "F:\\output.pdf"; // Replace with your output PDF file path
+        String searchWord = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}|\\d{11}";
+        
+        censorPdfText(inputFilePath, outputFilePath, searchWord);
     }
+    
+    public static void censorPdfText(String inputFilePath, String outputFilePath, String searchWord) throws IOException {
+        PdfDocument pdfDoc = new PdfDocument(new PdfReader(inputFilePath), new PdfWriter(outputFilePath));
+        Document document = new Document(pdfDoc);
+
+        for (int pageNum = 1; pageNum <= pdfDoc.getNumberOfPages(); pageNum++) {
+            PdfPage page = pdfDoc.getPage(pageNum);
+
+            String text = PdfTextExtractor.getTextFromPage(page);
+            text = text.replaceAll(searchWord, ""); // Remove CPFs
+
+            // Create a new page with the modified text
+            PdfPage newPage = pdfDoc.addNewPage();
+            document.add(new AreaBreak());
+            document.add(new Paragraph(text));
+
+            // Copy annotations (e.g., links) from the original page to the new page
+            PdfArray annotations = page.getPdfObject().getAsArray(PdfName.Annots);
+            if (annotations != null) {
+                newPage.getPdfObject().put(PdfName.Annots, annotations.copyTo(pdfDoc));
+            }
+        }
+
+        document.close();
+        pdfDoc.close();
+    }
+     
     public static boolean isValidCPF(String cpf) {
         if (cpf == null || cpf.length() != 11) {
             return false;

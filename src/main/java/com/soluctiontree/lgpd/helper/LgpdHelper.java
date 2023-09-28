@@ -5,6 +5,7 @@ package com.soluctiontree.lgpd.helper;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -13,7 +14,11 @@ import java.io.IOException;
 public class LgpdHelper {
 
     public static void main(String[] args) throws FileNotFoundException, IOException{
-        PDF.Create("PDF Teste"); 
-        PDF.Read("Teste"); 
+      SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                PdfFileSelector pdfFileSelector = new PdfFileSelector();
+                pdfFileSelector.setVisible(true);
+            }
+        });
     }
 }

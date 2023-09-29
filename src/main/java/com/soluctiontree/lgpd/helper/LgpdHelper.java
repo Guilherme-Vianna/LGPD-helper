@@ -19,7 +19,5 @@ public class LgpdHelper {
                 pdfFileSelector.setVisible(true);
             }
         });
-      
-        PDF.RedateWord("F:\\Alice.pdf", "F:\\Redated.pdf");
     }
 }

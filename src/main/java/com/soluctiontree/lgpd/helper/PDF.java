@@ -14,6 +14,7 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.pdfcleanup.autosweep.ICleanupStrategy;
 import com.itextpdf.pdfcleanup.autosweep.PdfAutoSweepTools;
 import com.itextpdf.pdfcleanup.autosweep.RegexBasedCleanupStrategy;
+import java.io.File;
 
 import java.io.IOException;
 
@@ -29,23 +30,37 @@ public class PDF {
         PdfAutoSweepTools autoSweep = new PdfAutoSweepTools(cleanupStrategy);
         autoSweep.highlight(pdfDoc);
         doc.close();
+        
+        String outputPath = output.substring(0, output.lastIndexOf('.')) + "_redate.pdf";
+        File renamedFile = new File(outputPath);
+        new File(output).renameTo(renamedFile);
     }
     
-    public static void RedateCEP(String path, String output) throws IOException{
+    public static void RedateCEP(String path, String output) throws IOException {
         PdfDocument pdfDoc = new PdfDocument(new PdfReader(path), new PdfWriter(new FileOutputStream(output)));
         Document doc = new Document(pdfDoc);
         ICleanupStrategy cleanupStrategy = new RegexBasedCleanupStrategy(Pattern.compile("[0-9]{2}.[0-9]{3}-[0-9]{3}"));
         PdfAutoSweepTools autoSweep = new PdfAutoSweepTools(cleanupStrategy);
         autoSweep.highlight(pdfDoc);
         doc.close();
+
+        // Append "_redate" before the file extension
+        String outputPath = output.substring(0, output.lastIndexOf('.')) + "_redate.pdf";
+        File renamedFile = new File(outputPath);
+        new File(output).renameTo(renamedFile);
     }
-    
-     public static void RedateCPF(String path, String output) throws IOException{
+
+    public static void RedateCPF(String path, String output) throws IOException {
         PdfDocument pdfDoc = new PdfDocument(new PdfReader(path), new PdfWriter(new FileOutputStream(output)));
         Document doc = new Document(pdfDoc);
         ICleanupStrategy cleanupStrategy = new RegexBasedCleanupStrategy(Pattern.compile("[0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}"));
         PdfAutoSweepTools autoSweep = new PdfAutoSweepTools(cleanupStrategy);
         autoSweep.highlight(pdfDoc);
         doc.close();
+
+        // Append "_redate" before the file extension
+        String outputPath = output.substring(0, output.lastIndexOf('.')) + "_redate.pdf";
+        File renamedFile = new File(outputPath);
+        new File(output).renameTo(renamedFile);
     }
 }

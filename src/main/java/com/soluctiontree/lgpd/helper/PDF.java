@@ -4,18 +4,23 @@
  */
 package com.soluctiontree.lgpd.helper;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.itextpdf.kernel.pdf.canvas.parser.PdfCanvasProcessor;
+import com.itextpdf.kernel.pdf.canvas.parser.listener.LocationTextExtractionStrategy;
+import com.itextpdf.kernel.pdf.canvas.parser.PdfTextExtractor;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.kernel.pdf.canvas.parser.PdfCanvasProcessor;
-import com.itextpdf.kernel.pdf.canvas.parser.PdfTextExtractor;
-import com.itextpdf.kernel.pdf.canvas.parser.listener.LocationTextExtractionStrategy;
 import com.itextpdf.layout.Document;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import com.itextpdf.pdfcleanup.autosweep.ICleanupStrategy;
+import com.itextpdf.pdfcleanup.autosweep.PdfAutoSweep;
+import com.itextpdf.pdfcleanup.autosweep.RegexBasedCleanupStrategy;
+
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  *
@@ -47,7 +52,6 @@ public class PDF {
        }
         pdfDoc.close();
     }
-    
     public static void DetectCpf() throws FileNotFoundException, IOException 
     {
        PdfReader pdf = new PdfReader("F:\\Documento.pdf");
@@ -76,8 +80,12 @@ public class PDF {
             }
         }
         }
+        
+        String inputFilePath = "F:\\documento.pdf"; // Replace with your input PDF file path
+        String outputFilePath = "F:\\output.pdf"; // Replace with your output PDF file path
+        String searchWord = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}|\\d{11}";
     }
-    
+         
     public static boolean isValidCPF(String cpf) {
         if (cpf == null || cpf.length() != 11) {
             return false;
@@ -124,5 +132,16 @@ public class PDF {
         }
 
         return true;
+    }
+    
+    public static void RedateWord(String path, String output) throws IOException{
+        PdfDocument pdfDoc = new PdfDocument(new PdfReader(path), new PdfWriter(new FileOutputStream(output)));
+        Document doc = new Document(pdfDoc);
+
+        ICleanupStrategy cleanupStrategy = new RegexBasedCleanupStrategy(Pattern.compile("159.183.907-66", Pattern.CASE_INSENSITIVE));
+        PdfAutoSweep autoSweep = new PdfAutoSweep(cleanupStrategy);
+        autoSweep.cleanUp(pdfDoc);
+
+        doc.close();
     }
 }

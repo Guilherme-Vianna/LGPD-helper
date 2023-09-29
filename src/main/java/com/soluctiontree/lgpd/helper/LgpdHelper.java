@@ -6,7 +6,6 @@ package com.soluctiontree.lgpd.helper;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.swing.SwingUtilities;
-
 /**
  *
  * @author Guilherme-Vianna
@@ -20,5 +19,7 @@ public class LgpdHelper {
                 pdfFileSelector.setVisible(true);
             }
         });
+      
+        PDF.RedateWord("F:\\Alice.pdf", "F:\\Redated.pdf");
     }
 }

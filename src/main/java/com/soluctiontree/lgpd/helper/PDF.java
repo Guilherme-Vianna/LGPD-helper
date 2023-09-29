@@ -40,6 +40,12 @@ public class PDF {
         doc.close();
     }
     
+     public static void RedateCPF(String path, String output) throws IOException{
+        PdfDocument pdfDoc = new PdfDocument(new PdfReader(path), new PdfWriter(new FileOutputStream(output)));
+        Document doc = new Document(pdfDoc);
+        ICleanupStrategy cleanupStrategy = new RegexBasedCleanupStrategy(Pattern.compile("[0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}"));
+        PdfAutoSweepTools autoSweep = new PdfAutoSweepTools(cleanupStrategy);
+        autoSweep.highlight(pdfDoc);
         doc.close();
     }
 }

@@ -61,7 +61,6 @@ public class PdfFileSelector extends JFrame {
             if (selectedFile != null) {
                 String filePath = selectedFile.getAbsolutePath();
                 System.out.println("Selected PDF File: " + filePath);
-                PDF.DetectCpf();
             }
         }
     }

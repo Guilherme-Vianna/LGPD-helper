@@ -16,6 +16,9 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
+import com.itextpdf.pdfcleanup.autosweep.ICleanupStrategy;
+import com.itextpdf.pdfcleanup.autosweep.PdfAutoSweep;
+import com.itextpdf.pdfcleanup.autosweep.RegexBasedCleanupStrategy;
 
 import java.io.IOException;
 
@@ -129,5 +132,16 @@ public class PDF {
         }
 
         return true;
+    }
+    
+    public static void RedateWord(String path, String output) throws IOException{
+        PdfDocument pdfDoc = new PdfDocument(new PdfReader(path), new PdfWriter(new FileOutputStream(output)));
+        Document doc = new Document(pdfDoc);
+
+        ICleanupStrategy cleanupStrategy = new RegexBasedCleanupStrategy(Pattern.compile("159.183.907-66", Pattern.CASE_INSENSITIVE));
+        PdfAutoSweep autoSweep = new PdfAutoSweep(cleanupStrategy);
+        autoSweep.cleanUp(pdfDoc);
+
+        doc.close();
     }
 }

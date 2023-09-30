@@ -16,7 +16,15 @@ import com.itextpdf.pdfcleanup.autosweep.PdfAutoSweepTools;
 import com.itextpdf.pdfcleanup.autosweep.RegexBasedCleanupStrategy;
 import java.io.File;
 
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.pdfocr.OcrPdfCreator;
+import com.itextpdf.pdfocr.tesseract4.Tesseract4LibOcrEngine;
+import com.itextpdf.pdfocr.tesseract4.Tesseract4OcrEngineProperties;
+import java.io.FileNotFoundException;
+
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -62,5 +70,19 @@ public class PDF {
         String outputPath = output.substring(0, output.lastIndexOf('.')) + "_redate.pdf";
         File renamedFile = new File(outputPath);
         new File(output).renameTo(renamedFile);
+    }
+    
+    public static void OCRImage() throws FileNotFoundException, IOException{
+        Tesseract4OcrEngineProperties tesseract4OcrEngineProperties = new Tesseract4OcrEngineProperties();
+        List LIST_IMAGES_OCR = Arrays.asList(new File("F:\\Sample_Scanned_PDF.pdf")); //replace with the image file name you have uploaded
+        String OUTPUT_PDF = "F:\\Sample_Scanned_PDF_OCR.pdf";
+       
+        Tesseract4LibOcrEngine tesseractReader = new Tesseract4LibOcrEngine(tesseract4OcrEngineProperties);
+        tesseract4OcrEngineProperties.setPathToTessData(new File("F:\\"));
+
+        OcrPdfCreator ocrPdfCreator = new OcrPdfCreator(tesseractReader);
+        try (PdfWriter writer = new PdfWriter(OUTPUT_PDF)) {
+            ocrPdfCreator.createPdf(LIST_IMAGES_OCR, writer).close();
+        }
     }
 }

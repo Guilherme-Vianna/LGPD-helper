@@ -17,6 +17,7 @@ import com.itextpdf.pdfcleanup.autosweep.RegexBasedCleanupStrategy;
 import java.io.File;
 
 import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.pdfcleanup.PdfCleaner;
 import com.itextpdf.pdfocr.OcrPdfCreator;
 import com.itextpdf.pdfocr.tesseract4.Tesseract4LibOcrEngine;
 import com.itextpdf.pdfocr.tesseract4.Tesseract4OcrEngineProperties;
@@ -48,11 +49,8 @@ public class PDF {
         PdfDocument pdfDoc = new PdfDocument(new PdfReader(path), new PdfWriter(new FileOutputStream(output)));
         Document doc = new Document(pdfDoc);
         ICleanupStrategy cleanupStrategy = new RegexBasedCleanupStrategy(Pattern.compile("[0-9]{2}.[0-9]{3}-[0-9]{3}"));
-        PdfAutoSweepTools autoSweep = new PdfAutoSweepTools(cleanupStrategy);
-        autoSweep.highlight(pdfDoc);
+        PdfCleaner.autoSweepCleanUp(pdfDoc, cleanupStrategy);
         doc.close();
-
-        // Append "_redate" before the file extension
         String outputPath = output.substring(0, output.lastIndexOf('.')) + "_redate.pdf";
         File renamedFile = new File(outputPath);
         new File(output).renameTo(renamedFile);
@@ -62,11 +60,8 @@ public class PDF {
         PdfDocument pdfDoc = new PdfDocument(new PdfReader(path), new PdfWriter(new FileOutputStream(output)));
         Document doc = new Document(pdfDoc);
         ICleanupStrategy cleanupStrategy = new RegexBasedCleanupStrategy(Pattern.compile("[0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}"));
-        PdfAutoSweepTools autoSweep = new PdfAutoSweepTools(cleanupStrategy);
-        autoSweep.highlight(pdfDoc);
+        PdfCleaner.autoSweepCleanUp(pdfDoc, cleanupStrategy);
         doc.close();
-
-        // Append "_redate" before the file extension
         String outputPath = output.substring(0, output.lastIndexOf('.')) + "_redate.pdf";
         File renamedFile = new File(outputPath);
         new File(output).renameTo(renamedFile);

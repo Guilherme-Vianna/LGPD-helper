@@ -20,7 +20,7 @@ public class PdfFileSelector extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(500, 250); // Increased height to accommodate the text field
 
-        selectButton = new JButton("Select PDF Documents");
+        selectButton = new JButton("Select PDF and DOCX Documents"); // Update the button text
         selectButton.setFont(new Font("Arial", Font.PLAIN, 16));
         selectButton.addActionListener(new ActionListener() {
             @Override
@@ -34,14 +34,17 @@ public class PdfFileSelector extends JFrame {
         });
 
         fileChooser = new JFileChooser();
-        fileChooser.setMultiSelectionEnabled(true); // Allow multiple file selection
+        fileChooser.setMultiSelectionEnabled(true);
+
+        // Update the file filter to accept both PDF and DOCX files
         fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
             public boolean accept(File file) {
-                return file.getName().toLowerCase().endsWith(".pdf") || file.isDirectory();
+                String fileName = file.getName().toLowerCase();
+                return fileName.endsWith(".pdf") || fileName.endsWith(".docx") || file.isDirectory();
             }
 
             public String getDescription() {
-                return "PDF Files (*.pdf)";
+                return "PDF and DOCX Files (*.pdf, *.docx)";
             }
         });
 
@@ -72,28 +75,42 @@ public class PdfFileSelector extends JFrame {
     private void showFileChooser() throws IOException {
         int returnValue = fileChooser.showOpenDialog(null);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
-            File[] selectedFiles = fileChooser.getSelectedFiles(); // Get selected files
+            File[] selectedFiles = fileChooser.getSelectedFiles();
             if (selectedFiles != null && selectedFiles.length > 0) {
-                // Get the selected operation
                 String selectedOperation = (String) operationComboBox.getSelectedItem();
 
                 for (File selectedFile : selectedFiles) {
                     String filePath = selectedFile.getAbsolutePath();
-                    System.out.println("Selected PDF File: " + filePath);
+                    System.out.println("Selected File: " + filePath);
+
+                    String fileExtension = getFileExtension(filePath);
 
                     if ("Redate CPF".equals(selectedOperation)) {
-                        PDF.RedateCPF(filePath, filePath + "_redate.pdf"); // Append "_redate" before the extension
+                        if ("pdf".equalsIgnoreCase(fileExtension)) {
+                            PDF.RedateCPF(filePath, filePath + "_redate.pdf");
+                        } else if ("docx".equalsIgnoreCase(fileExtension)) {
+                            PDF.RedateCPFDocx(filePath); 
+                        }
                     } else if ("Redate Regex".equals(selectedOperation)) {
-                        // Get the Regex input from the text field
                         String regex = regexTextField.getText();
-                        PDF.RedateRegex(filePath, filePath + "_redate.pdf", regex); // Append "_redate" before the extension
+                        if ("pdf".equalsIgnoreCase(fileExtension)) {
+                            PDF.RedateRegex(filePath, filePath + "_redate.pdf", regex);
+                        } else if ("docx".equalsIgnoreCase(fileExtension)) {
+                        }
                     }
                 }
 
-                // Show a message when the operations are complete
                 JOptionPane.showMessageDialog(this, "Operations completed!", "Success", JOptionPane.INFORMATION_MESSAGE);
             }
         }
+    }
+
+    private String getFileExtension(String filePath) {
+        int lastDotIndex = filePath.lastIndexOf('.');
+        if (lastDotIndex != -1) {
+            return filePath.substring(lastDotIndex + 1).toLowerCase();
+        }
+        return "";
     }
 
     public static void main(String[] args) {

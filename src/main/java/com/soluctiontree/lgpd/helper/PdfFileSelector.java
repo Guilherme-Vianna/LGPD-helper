@@ -52,7 +52,7 @@ public class PdfFileSelector extends JFrame {
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
         panel.add(selectButton);
 
-        String[] operationOptions = {"Redate CPF", "Redate Regex"};
+        String[] operationOptions = {"Redate CPF", "Redate Regex", "PDF To Image"};
         operationComboBox = new JComboBox<>(operationOptions);
         operationComboBox.setFont(new Font("Arial", Font.PLAIN, 16));
         panel.add(operationComboBox);
@@ -97,6 +97,8 @@ public class PdfFileSelector extends JFrame {
                             PDF.RedateRegex(filePath, filePath + "_redate.pdf", regex);
                         } else if ("docx".equalsIgnoreCase(fileExtension)) {
                         }
+                    } else if ("PDF To Image".equals(selectedOperation)) { 
+                        PDF.PDFToImage(filePath);
                     }
                 }
 

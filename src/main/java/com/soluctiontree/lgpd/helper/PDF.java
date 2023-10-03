@@ -80,17 +80,14 @@ public class PDF {
         new File(output).renameTo(renamedFile);
     }
     
-    public static void OCRImage() throws FileNotFoundException, IOException{
+    public static void OCRImage(List<File> images) throws FileNotFoundException, IOException{
         Tesseract4OcrEngineProperties tesseract4OcrEngineProperties = new Tesseract4OcrEngineProperties();
-        List LIST_IMAGES_OCR = Arrays.asList(new File("F:\\Sample_Scanned_PDF.pdf")); //replace with the image file name you have uploaded
-        String OUTPUT_PDF = "F:\\Sample_Scanned_PDF_OCR.pdf";
-       
+        String output = "F:\\"; 
         Tesseract4LibOcrEngine tesseractReader = new Tesseract4LibOcrEngine(tesseract4OcrEngineProperties);
         tesseract4OcrEngineProperties.setPathToTessData(new File("F:\\"));
-
         OcrPdfCreator ocrPdfCreator = new OcrPdfCreator(tesseractReader);
-        try (PdfWriter writer = new PdfWriter(OUTPUT_PDF)) {
-            ocrPdfCreator.createPdf(LIST_IMAGES_OCR, writer).close();
+        try (PdfWriter writer = new PdfWriter(output)) {
+            ocrPdfCreator.createPdf(images, writer).close();
         }
     }
     

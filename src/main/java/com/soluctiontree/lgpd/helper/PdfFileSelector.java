@@ -40,7 +40,7 @@ public class PdfFileSelector extends JFrame {
         fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
             public boolean accept(File file) {
                 String fileName = file.getName().toLowerCase();
-                return fileName.endsWith(".pdf") || fileName.endsWith(".docx") || file.isDirectory();
+                return fileName.endsWith(".pdf") || fileName.endsWith(".docx") || fileName.endsWith(".png") || fileName.endsWith(".jpeg") ||fileName.endsWith(".jpg") ||file.isDirectory();
             }
 
             public String getDescription() {
@@ -52,7 +52,7 @@ public class PdfFileSelector extends JFrame {
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
         panel.add(selectButton);
 
-        String[] operationOptions = {"Redate CPF", "Redate Regex", "PDF To Image"};
+        String[] operationOptions = {"Redate CPF", "Redate Regex", "PDF To Image", "OCR Image"};
         operationComboBox = new JComboBox<>(operationOptions);
         operationComboBox.setFont(new Font("Arial", Font.PLAIN, 16));
         panel.add(operationComboBox);
@@ -78,13 +78,17 @@ public class PdfFileSelector extends JFrame {
             File[] selectedFiles = fileChooser.getSelectedFiles();
             if (selectedFiles != null && selectedFiles.length > 0) {
                 String selectedOperation = (String) operationComboBox.getSelectedItem();
-
+                
+                if ("OCR Image".equals(selectedOperation)) {
+                    PDF.OCRImage(selectedFiles);
+                }
+                
                 for (File selectedFile : selectedFiles) {
                     String filePath = selectedFile.getAbsolutePath();
                     System.out.println("Selected File: " + filePath);
 
                     String fileExtension = getFileExtension(filePath);
-
+                    
                     if ("Redate CPF".equals(selectedOperation)) {
                         if ("pdf".equalsIgnoreCase(fileExtension)) {
                             PDF.RedateCPF(filePath, filePath + "_redate.pdf");

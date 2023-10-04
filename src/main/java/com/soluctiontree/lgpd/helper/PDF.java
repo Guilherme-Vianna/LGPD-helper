@@ -79,14 +79,23 @@ public class PDF {
         new File(output).renameTo(renamedFile);
     }
     
-    public static void OCRImage(List<File> images) throws FileNotFoundException, IOException{
+    public static void OCRImage(File[] images) throws FileNotFoundException, IOException{
+        System.out.println("Scanning images");
+        List<File> imagesList = Arrays.asList(images);
+
         Tesseract4OcrEngineProperties tesseract4OcrEngineProperties = new Tesseract4OcrEngineProperties();
-        String output = "F:\\"; 
-        Tesseract4LibOcrEngine tesseractReader = new Tesseract4LibOcrEngine(tesseract4OcrEngineProperties);
         tesseract4OcrEngineProperties.setPathToTessData(new File("F:\\"));
-        OcrPdfCreator ocrPdfCreator = new OcrPdfCreator(tesseractReader);
-        try (PdfWriter writer = new PdfWriter(output)) {
-            ocrPdfCreator.createPdf(images, writer).close();
+
+        String output = "C:\\Users\\User\\Desktop\\Teste\\Doc_OCR";   
+        
+        OCRProgressBar progressBar = new OCRProgressBar(imagesList.size());
+        for (int i = 0; i < imagesList.size(); i++) {
+            File image = imagesList.get(i);
+            String outputPath = image.getPath() + i + "_ocr.pdf"; 
+            PdfWriter writer = new PdfWriter(outputPath); 
+            OcrPdfCreator ocrPdfCreator = new OcrPdfCreator(new Tesseract4LibOcrEngine(tesseract4OcrEngineProperties));
+            ocrPdfCreator.createPdf(Arrays.asList(image), writer).close();
+            progressBar.increment();
         }
     }
     

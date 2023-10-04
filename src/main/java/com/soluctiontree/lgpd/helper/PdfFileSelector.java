@@ -40,7 +40,7 @@ public class PdfFileSelector extends JFrame {
         fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
             public boolean accept(File file) {
                 String fileName = file.getName().toLowerCase();
-                return fileName.endsWith(".pdf") || fileName.endsWith(".docx") || file.isDirectory();
+                return fileName.endsWith(".pdf") || fileName.endsWith(".docx") || fileName.endsWith(".png") || fileName.endsWith(".jpeg") ||fileName.endsWith(".jpg") ||file.isDirectory();
             }
 
             public String getDescription() {
@@ -79,9 +79,8 @@ public class PdfFileSelector extends JFrame {
             if (selectedFiles != null && selectedFiles.length > 0) {
                 String selectedOperation = (String) operationComboBox.getSelectedItem();
                 
-                if ("Image To OCR".equals(selectedOperation)) {
-                    List<File> images = Arrays.asList(selectedFiles); 
-                    PDF.OCRImage(Arrays.asList(selectedFiles));
+                if ("OCR Image".equals(selectedOperation)) {
+                    PDF.OCRImage(selectedFiles);
                 }
                 
                 for (File selectedFile : selectedFiles) {

@@ -12,7 +12,6 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.layout.Document;
 import com.itextpdf.pdfcleanup.autosweep.ICleanupStrategy;
-import com.itextpdf.pdfcleanup.autosweep.PdfAutoSweepTools;
 import com.itextpdf.pdfcleanup.autosweep.RegexBasedCleanupStrategy;
 
 import com.itextpdf.kernel.pdf.PdfWriter;
@@ -23,7 +22,7 @@ import com.itextpdf.pdfocr.tesseract4.Tesseract4OcrEngineProperties;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.*; 
 import java.util.regex.Matcher;
 
 import org.apache.pdfbox.Loader;
@@ -39,6 +38,7 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.util.List;
+import javafx.scene.control.ProgressBar;
 
 /**
  *
@@ -49,8 +49,7 @@ public class PDF {
         PdfDocument pdfDoc = new PdfDocument(new PdfReader(path), new PdfWriter(new FileOutputStream(output)));
         Document doc = new Document(pdfDoc);
         ICleanupStrategy cleanupStrategy = new RegexBasedCleanupStrategy(Pattern.compile(regex));
-        PdfAutoSweepTools autoSweep = new PdfAutoSweepTools(cleanupStrategy);
-        autoSweep.highlight(pdfDoc);
+        PdfCleaner.autoSweepCleanUp(pdfDoc, cleanupStrategy);
         doc.close();
         
         String outputPath = output.substring(0, output.lastIndexOf('.')) + "_redate.pdf";

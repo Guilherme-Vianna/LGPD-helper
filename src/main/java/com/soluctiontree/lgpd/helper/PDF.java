@@ -38,65 +38,56 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.util.List;
-import javafx.scene.control.ProgressBar;
 
 /**
  *
  * @author User
  */
 public class PDF {
-    public static void RedateRegex(String path, String output, String regex) throws IOException{
-        PdfDocument pdfDoc = new PdfDocument(new PdfReader(path), new PdfWriter(new FileOutputStream(output)));
+    public static void RedateRegex(String path, String regex) throws IOException{
+        String outputPath = path.substring(0, path.lastIndexOf('.')) + "_redate.pdf";
+        PdfDocument pdfDoc = new PdfDocument(new PdfReader(path), new PdfWriter(new FileOutputStream(outputPath)));
         Document doc = new Document(pdfDoc);
         ICleanupStrategy cleanupStrategy = new RegexBasedCleanupStrategy(Pattern.compile(regex));
         PdfCleaner.autoSweepCleanUp(pdfDoc, cleanupStrategy);
         doc.close();
         
-        String outputPath = output.substring(0, output.lastIndexOf('.')) + "_redate.pdf";
+        
         File renamedFile = new File(outputPath);
-        new File(output).renameTo(renamedFile);
+        new File(path).renameTo(renamedFile);
     }
     
-    public static void RedateCEP(String path, String output) throws IOException {
-        PdfDocument pdfDoc = new PdfDocument(new PdfReader(path), new PdfWriter(new FileOutputStream(output)));
+    public static void RedateCEP(String path) throws IOException {
+        String outputPath = path.substring(0, path.lastIndexOf('.')) + "_redate.pdf";
+        PdfDocument pdfDoc = new PdfDocument(new PdfReader(path), new PdfWriter(new FileOutputStream(outputPath)));
         Document doc = new Document(pdfDoc);
         ICleanupStrategy cleanupStrategy = new RegexBasedCleanupStrategy(Pattern.compile("[0-9]{2}.[0-9]{3}-[0-9]{3}"));
         PdfCleaner.autoSweepCleanUp(pdfDoc, cleanupStrategy);
-        doc.close();
-        String outputPath = output.substring(0, output.lastIndexOf('.')) + "_redate.pdf";
+        doc.close();        
         File renamedFile = new File(outputPath);
-        new File(output).renameTo(renamedFile);
+        new File(path).renameTo(renamedFile);
     }
 
-    public static void RedateCPF(String path, String output) throws IOException {
-        PdfDocument pdfDoc = new PdfDocument(new PdfReader(path), new PdfWriter(new FileOutputStream(output)));
+    public static void RedateCPF(String path) throws IOException {
+        String outputPath = path.substring(0, path.lastIndexOf('.')) + "_redate.pdf";
+        PdfDocument pdfDoc = new PdfDocument(new PdfReader(path), new PdfWriter(new FileOutputStream(outputPath)));
         Document doc = new Document(pdfDoc);
         ICleanupStrategy cleanupStrategy = new RegexBasedCleanupStrategy(Pattern.compile("[0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}"));
         PdfCleaner.autoSweepCleanUp(pdfDoc, cleanupStrategy);
         doc.close();
-        String outputPath = output.substring(0, output.lastIndexOf('.')) + "_redate.pdf";
         File renamedFile = new File(outputPath);
-        new File(output).renameTo(renamedFile);
+        new File(outputPath).renameTo(renamedFile);
     }
     
-    public static void OCRImage(File[] images) throws FileNotFoundException, IOException{
-        System.out.println("Scanning images");
-        List<File> imagesList = Arrays.asList(images);
-
+    public static void OCRImage(File[] images, String path) throws FileNotFoundException, IOException{
+        String outputPath = path.substring(0, path.lastIndexOf('.')) + "_ocr.pdf";
+        
         Tesseract4OcrEngineProperties tesseract4OcrEngineProperties = new Tesseract4OcrEngineProperties();
         tesseract4OcrEngineProperties.setPathToTessData(new File("F:\\"));
-
-        String output = "C:\\Users\\User\\Desktop\\Teste\\Doc_OCR";   
         
-        OCRProgressBar progressBar = new OCRProgressBar(imagesList.size());
-        for (int i = 0; i < imagesList.size(); i++) {
-            File image = imagesList.get(i);
-            String outputPath = image.getPath() + i + "_ocr.pdf"; 
-            PdfWriter writer = new PdfWriter(outputPath); 
-            OcrPdfCreator ocrPdfCreator = new OcrPdfCreator(new Tesseract4LibOcrEngine(tesseract4OcrEngineProperties));
-            ocrPdfCreator.createPdf(Arrays.asList(image), writer).close();
-            progressBar.increment();
-        }
+        PdfWriter writer = new PdfWriter(outputPath); 
+        OcrPdfCreator ocrPdfCreator = new OcrPdfCreator(new Tesseract4LibOcrEngine(tesseract4OcrEngineProperties));
+        ocrPdfCreator.createPdf(Arrays.asList(images), writer).close();
     }
     
     public static void PDFToImage(String path) throws IOException {

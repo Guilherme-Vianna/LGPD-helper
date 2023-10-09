@@ -44,28 +44,30 @@ import java.util.List;
  * @author User
  */
 public class PDF {
-    public static void RedateRegex(String path, String output, String regex) throws IOException{
-        PdfDocument pdfDoc = new PdfDocument(new PdfReader(path), new PdfWriter(new FileOutputStream(output)));
+    public static void RedateRegex(String path, String regex) throws IOException{
+        String outputPath = path.substring(0, path.lastIndexOf('.')) + "_redate.pdf";
+        PdfDocument pdfDoc = new PdfDocument(new PdfReader(path), new PdfWriter(new FileOutputStream(outputPath)));
         Document doc = new Document(pdfDoc);
         ICleanupStrategy cleanupStrategy = new RegexBasedCleanupStrategy(Pattern.compile(regex));
         PdfCleaner.autoSweepCleanUp(pdfDoc, cleanupStrategy);
         doc.close();
         
-        String outputPath = output.substring(0, output.lastIndexOf('.')) + "_redate.pdf";
+        
         File renamedFile = new File(outputPath);
-        new File(output).renameTo(renamedFile);
+        new File(path).renameTo(renamedFile);
     }
     
-    public static void RedateCEP(String path, String output) throws IOException {
-        PdfDocument pdfDoc = new PdfDocument(new PdfReader(path), new PdfWriter(new FileOutputStream(output)));
+    public static void RedateCEP(String path) throws IOException {
+        String outputPath = path.substring(0, path.lastIndexOf('.')) + "_redate.pdf";
+        PdfDocument pdfDoc = new PdfDocument(new PdfReader(path), new PdfWriter(new FileOutputStream(outputPath)));
         Document doc = new Document(pdfDoc);
         ICleanupStrategy cleanupStrategy = new RegexBasedCleanupStrategy(Pattern.compile("[0-9]{2}.[0-9]{3}-[0-9]{3}"));
         PdfCleaner.autoSweepCleanUp(pdfDoc, cleanupStrategy);
-        doc.close();
-        String outputPath = output.substring(0, output.lastIndexOf('.')) + "_redate.pdf";
+        doc.close();        
         File renamedFile = new File(outputPath);
-        new File(output).renameTo(renamedFile);
+        new File(path).renameTo(renamedFile);
     }
+
 
     public static void RedateCPFAndRG(String path, String output) throws IOException {
         PdfDocument pdfDoc = new PdfDocument(new PdfReader(path), new PdfWriter(new FileOutputStream(output)));
@@ -77,9 +79,8 @@ public class PDF {
         PdfCleaner.autoSweepCleanUp(pdfDoc, rgcleanupStrategy);
         
         doc.close();
-        String outputPath = output.substring(0, output.lastIndexOf('.')) + "_redate.pdf";
         File renamedFile = new File(outputPath);
-        new File(output).renameTo(renamedFile);
+        new File(outputPath).renameTo(renamedFile);
     }
     
     public static void OCRImage(File[] images) throws FileNotFoundException, IOException{

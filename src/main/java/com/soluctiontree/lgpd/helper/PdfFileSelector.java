@@ -13,14 +13,14 @@ public class PdfFileSelector extends JFrame {
     private JButton selectButton;
     private JFileChooser fileChooser;
     private JComboBox<String> operationComboBox;
-    private JTextField regexTextField; // Text field for Regex input
+    private JTextField regexTextField; 
 
     public PdfFileSelector() {
         setTitle("LGPD Helper");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(500, 250); // Increased height to accommodate the text field
+        setSize(500, 250); 
 
-        selectButton = new JButton("Select PDF and DOCX Documents"); // Update the button text
+        selectButton = new JButton("Selecione arquivos PDF ou DOCX"); 
         selectButton.setFont(new Font("Arial", Font.PLAIN, 16));
         selectButton.addActionListener(new ActionListener() {
             @Override
@@ -36,7 +36,6 @@ public class PdfFileSelector extends JFrame {
         fileChooser = new JFileChooser();
         fileChooser.setMultiSelectionEnabled(true);
 
-        // Update the file filter to accept both PDF and DOCX files
         fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
             public boolean accept(File file) {
                 String fileName = file.getName().toLowerCase();
@@ -52,12 +51,11 @@ public class PdfFileSelector extends JFrame {
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
         panel.add(selectButton);
 
-        String[] operationOptions = {"Redate CPF", "Redate Regex", "PDF To Image", "OCR Image"};
+        String[] operationOptions = {"Censurar Dados", "Censurar Padrão", "PDF Para Imagem", "OCR Imagem"};
         operationComboBox = new JComboBox<>(operationOptions);
         operationComboBox.setFont(new Font("Arial", Font.PLAIN, 16));
         panel.add(operationComboBox);
 
-        // Add a label and text field for Regex input
         JLabel regexLabel = new JLabel("Regular Expression:");
         regexLabel.setFont(new Font("Arial", Font.PLAIN, 16));
         panel.add(regexLabel);
@@ -68,7 +66,6 @@ public class PdfFileSelector extends JFrame {
 
         add(panel, BorderLayout.CENTER);
 
-        // Center the window on the screen
         setLocationRelativeTo(null);
     }
 
@@ -79,7 +76,7 @@ public class PdfFileSelector extends JFrame {
             if (selectedFiles != null && selectedFiles.length > 0) {
                 String selectedOperation = (String) operationComboBox.getSelectedItem();
                 
-                if ("OCR Image".equals(selectedOperation)) {
+                if ("OCR Imagem".equals(selectedOperation)) {
                     PDF.OCRImage(selectedFiles);
                 }
                 
@@ -89,19 +86,19 @@ public class PdfFileSelector extends JFrame {
 
                     String fileExtension = getFileExtension(filePath);
                     
-                    if ("Redate CPF".equals(selectedOperation)) {
+                    if ("Censurar Dados".equals(selectedOperation)) {
                         if ("pdf".equalsIgnoreCase(fileExtension)) {
-                            PDF.RedateCPF(filePath, filePath + "_redate.pdf");
+                            PDF.RedateCPFAndRG(filePath, filePath + "_redate.pdf");
                         } else if ("docx".equalsIgnoreCase(fileExtension)) {
-                            PDF.RedateCPFDocx(filePath); 
+                            PDF.RedateCPFAndRGDocx(filePath); 
                         }
-                    } else if ("Redate Regex".equals(selectedOperation)) {
+                    } else if ("Censurar Padrão".equals(selectedOperation)) {
                         String regex = regexTextField.getText();
                         if ("pdf".equalsIgnoreCase(fileExtension)) {
                             PDF.RedateRegex(filePath, filePath + "_redate.pdf", regex);
                         } else if ("docx".equalsIgnoreCase(fileExtension)) {
                         }
-                    } else if ("PDF To Image".equals(selectedOperation)) { 
+                    } else if ("PDF Para Imagem".equals(selectedOperation)) { 
                         PDF.PDFToImage(filePath);
                     }
                 }

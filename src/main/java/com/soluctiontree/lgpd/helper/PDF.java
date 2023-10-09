@@ -68,26 +68,36 @@ public class PDF {
         new File(path).renameTo(renamedFile);
     }
 
-    public static void RedateCPF(String path) throws IOException {
-        String outputPath = path.substring(0, path.lastIndexOf('.')) + "_redate.pdf";
-        PdfDocument pdfDoc = new PdfDocument(new PdfReader(path), new PdfWriter(new FileOutputStream(outputPath)));
+
+    public static void RedateCPFAndRG(String path, String output) throws IOException {
+        PdfDocument pdfDoc = new PdfDocument(new PdfReader(path), new PdfWriter(new FileOutputStream(output)));
         Document doc = new Document(pdfDoc);
-        ICleanupStrategy cleanupStrategy = new RegexBasedCleanupStrategy(Pattern.compile("[0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}"));
-        PdfCleaner.autoSweepCleanUp(pdfDoc, cleanupStrategy);
+        ICleanupStrategy cpfcleanupStrategy = new RegexBasedCleanupStrategy(Pattern.compile("[0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}"));
+        ICleanupStrategy rgcleanupStrategy = new RegexBasedCleanupStrategy(Pattern.compile("\\b[0-9]{2}.[0-9]{3}.[0-9]{3}-[0-9]\\b"));
+       
+        PdfCleaner.autoSweepCleanUp(pdfDoc, cpfcleanupStrategy);
+        PdfCleaner.autoSweepCleanUp(pdfDoc, rgcleanupStrategy);
+        
         doc.close();
         File renamedFile = new File(outputPath);
         new File(outputPath).renameTo(renamedFile);
     }
     
-    public static void OCRImage(File[] images, String path) throws FileNotFoundException, IOException{
-        String outputPath = path.substring(0, path.lastIndexOf('.')) + "_ocr.pdf";
-        
+    public static void OCRImage(File[] images) throws FileNotFoundException, IOException{
+        List<File> imagesList = Arrays.asList(images);
+
         Tesseract4OcrEngineProperties tesseract4OcrEngineProperties = new Tesseract4OcrEngineProperties();
-        tesseract4OcrEngineProperties.setPathToTessData(new File("F:\\"));
-        
-        PdfWriter writer = new PdfWriter(outputPath); 
-        OcrPdfCreator ocrPdfCreator = new OcrPdfCreator(new Tesseract4LibOcrEngine(tesseract4OcrEngineProperties));
-        ocrPdfCreator.createPdf(Arrays.asList(images), writer).close();
+        tesseract4OcrEngineProperties.setPathToTessData(new File("C:\\Documents\\OCRData"));
+
+        OCRProgressBar progressBar = new OCRProgressBar(imagesList.size());
+        for (int i = 0; i < imagesList.size(); i++) {
+            File image = imagesList.get(i);
+            String outputPath = image.getPath() + i + "_ocr.pdf"; 
+            PdfWriter writer = new PdfWriter(outputPath); 
+            OcrPdfCreator ocrPdfCreator = new OcrPdfCreator(new Tesseract4LibOcrEngine(tesseract4OcrEngineProperties));
+            ocrPdfCreator.createPdf(Arrays.asList(image), writer).close();
+            progressBar.increment();
+        }
     }
     
     public static void PDFToImage(String path) throws IOException {
@@ -102,13 +112,13 @@ public class PDF {
         }
     } 
     
-    public static void RedateCPFDocx (String path) throws FileNotFoundException, FileNotFoundException, IOException {
+    public static void RedateCPFAndRGDocx (String path) throws FileNotFoundException, FileNotFoundException, IOException {
         FileInputStream fis = new FileInputStream(path);
         XWPFDocument document = new XWPFDocument(fis);
         fis.close();
         
-        Pattern cpfPattern = Pattern.compile("[0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}");
-
+        Pattern cpfPattern = Pattern.compile("\\b[0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}\\b");
+        
         for (XWPFParagraph paragraph : document.getParagraphs()) {
             for (XWPFRun run : paragraph.getRuns()) {
                 String text = run.getText(0);
@@ -118,20 +128,43 @@ public class PDF {
 
                     while (matcher.find()) {
                         String cpf = matcher.group();
-                        String maskedCpf = "***" + cpf.substring(3, 11) + "-**";
-                        matcher.appendReplacement(sb, maskedCpf);
+                        String maskedCPF = "***" + cpf.substring(3, 11) + "-**";
+                        matcher.appendReplacement(sb, maskedCPF);
                     }
+                    
                     matcher.appendTail(sb);
                     run.setText(sb.toString(), 0);
                 }
             }
+            
         }
-        String outputPath = path.substring(0, path.lastIndexOf('.')) + "_redate.docx";
+        
+        Pattern rgPattern = Pattern.compile("\\b[0-9]{2}.[0-9]{3}.[0-9]{3}-[0-9]\\b");
+        
+        for (XWPFParagraph paragraph : document.getParagraphs()) {
+            for (XWPFRun run : paragraph.getRuns()) {
+                String text = run.getText(0);
+                if (text != null) {
+                    Matcher matcher = rgPattern.matcher(text);
+                    StringBuffer sb = new StringBuffer();
+
+                    while (matcher.find()) {
+                        String rg = matcher.group();
+                        String maskedRG = "**." + rg.substring(3, 10) + "-*";
+                        matcher.appendReplacement(sb, maskedRG);
+                    }
+                    
+                    matcher.appendTail(sb);
+                    run.setText(sb.toString(), 0);
+                }
+            }
+            
+        }
+        
+        String outputPath = path.substring(0, path.lastIndexOf('.')) + "_redateCPF_.docx";
         FileOutputStream fos = new FileOutputStream(outputPath);
         document.write(fos);
         fos.close();
         document.close();
-
-        System.out.println("CPF detection and renaming completed.");
     } 
 }

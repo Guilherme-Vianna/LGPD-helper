@@ -69,8 +69,8 @@ public class PDF {
     }
 
 
-    public static void RedateCPFAndRG(String path, String output) throws IOException {
-        PdfDocument pdfDoc = new PdfDocument(new PdfReader(path), new PdfWriter(new FileOutputStream(output)));
+    public static void RedateCPFAndRG(String path) throws IOException {
+        PdfDocument pdfDoc = new PdfDocument(new PdfReader(path), new PdfWriter(new FileOutputStream(path.substring(0, path.lastIndexOf('.')) + "_redate_.pdf")));
         Document doc = new Document(pdfDoc);
         ICleanupStrategy cpfcleanupStrategy = new RegexBasedCleanupStrategy(Pattern.compile("[0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}"));
         ICleanupStrategy rgcleanupStrategy = new RegexBasedCleanupStrategy(Pattern.compile("\\b[0-9]{2}.[0-9]{3}.[0-9]{3}-[0-9]\\b"));
@@ -79,6 +79,7 @@ public class PDF {
         PdfCleaner.autoSweepCleanUp(pdfDoc, rgcleanupStrategy);
         
         doc.close();
+        String outputPath = path.substring(0, path.lastIndexOf('.')) + "_redate_.pdf";
         File renamedFile = new File(outputPath);
         new File(outputPath).renameTo(renamedFile);
     }
@@ -161,7 +162,7 @@ public class PDF {
             
         }
         
-        String outputPath = path.substring(0, path.lastIndexOf('.')) + "_redateCPF_.docx";
+        String outputPath = path.substring(0, path.lastIndexOf('.')) + "_redate.docx";
         FileOutputStream fos = new FileOutputStream(outputPath);
         document.write(fos);
         fos.close();

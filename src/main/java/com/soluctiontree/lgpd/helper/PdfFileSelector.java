@@ -88,14 +88,14 @@ public class PdfFileSelector extends JFrame {
                     
                     if ("Censurar Dados".equals(selectedOperation)) {
                         if ("pdf".equalsIgnoreCase(fileExtension)) {
-                            PDF.RedateCPFAndRG(filePath, filePath + "_redate.pdf");
+                            PDF.RedateCPFAndRG(filePath);
                         } else if ("docx".equalsIgnoreCase(fileExtension)) {
                             PDF.RedateCPFAndRGDocx(filePath); 
                         }
                     } else if ("Censurar Padrão".equals(selectedOperation)) {
                         String regex = regexTextField.getText();
                         if ("pdf".equalsIgnoreCase(fileExtension)) {
-                            PDF.RedateRegex(filePath, filePath + "_redate.pdf", regex);
+                            PDF.RedateRegex(filePath, regex);
                         } else if ("docx".equalsIgnoreCase(fileExtension)) {
                         }
                     } else if ("PDF Para Imagem".equals(selectedOperation)) { 

@@ -58,14 +58,15 @@ public class OperationSelector extends JFrame {
                     if (returnValue == FileSelector.APPROVE_OPTION) {
                         File[] selectedFiles = fileSelector.getSelectedFiles();
                         JOptionPane.showMessageDialog(null, "Operacao iniciada! Aguarde a mensagem de termino");
-                        
+                        progressBar.setValue(0);
                         progressBar.setMaximum(selectedFiles.length);
                         
-                        for (int i = 0; i <= selectedFiles.length; i++) {
-                            PDF.RedateCPF(selectedFiles[i].getAbsolutePath());
+                        for (int i = 0; i < selectedFiles.length; i++) {
+                            PDF.RedateCPFAndRGDocx(selectedFiles[i].getAbsolutePath());
                             progressBar.setValue(i);
                         }
                         
+                        progressBar.setValue(selectedFiles.length);
                         JOptionPane.showMessageDialog(null, "Operacao concluida!");
                     }
                 } catch (IOException ex) {
@@ -86,14 +87,15 @@ public class OperationSelector extends JFrame {
                     if (returnValue == FileSelector.APPROVE_OPTION) {
                         File[] selectedFiles = fileSelector.getSelectedFiles();
                         JOptionPane.showMessageDialog(null, "Operacao iniciada! Aguarde a mensagem de termino");
-                        
+                        progressBar.setValue(0);
                         progressBar.setMaximum(selectedFiles.length);
 
-                        for (int i = 0; i <= selectedFiles.length; i++) {
-                            PDF.RedateCPF(selectedFiles[i].getAbsolutePath());
+                        for (int i = 0; i < selectedFiles.length; i++) {
+                            PDF.RedateCPFAndRG(selectedFiles[i].getAbsolutePath());
                             progressBar.setValue(i);
                         }
                         
+                        progressBar.setValue(selectedFiles.length);
                         JOptionPane.showMessageDialog(null, "Operacao concluida!");
                     }
                 } catch (IOException ex) {
@@ -114,13 +116,15 @@ public class OperationSelector extends JFrame {
                         File[] selectedFiles = fileSelector.getSelectedFiles();
                         JOptionPane.showMessageDialog(null, "Operacao iniciada! Aguarde a mensagem de termino");
                         
+                        progressBar.setValue(0);
                         progressBar.setMaximum(selectedFiles.length);
                         
-                        for (int i = 0; i <= selectedFiles.length; i++) {
+                        for (int i = 0; i < selectedFiles.length; i++) {
                             PDF.PDFToImage(selectedFiles[i].getAbsolutePath());
                             progressBar.setValue(i);
                         }
                         
+                        progressBar.setValue(selectedFiles.length);
                         JOptionPane.showMessageDialog(null, "Operacao concluida!");
                     }
                 } catch (IOException ex) {
@@ -140,14 +144,16 @@ public class OperationSelector extends JFrame {
                     if (returnValue == FileSelector.APPROVE_OPTION) {
                         File[] selectedFiles = fileSelector.getSelectedFiles();
                         JOptionPane.showMessageDialog(null, "Operacao iniciada! Aguarde a mensagem de termino");
-
+                        
+                        progressBar.setValue(0);
                         progressBar.setMaximum(selectedFiles.length);
                         
                         for (int i = 0; i <= selectedFiles.length; i++) {
-                            PDF.RedateCPF(selectedFiles[i].getAbsolutePath());
+                            PDF.RedateCPFAndRG((selectedFiles[i].getAbsolutePath()));
                             progressBar.setValue(i);
                         }
                         
+                        progressBar.setValue(selectedFiles.length);
                         JOptionPane.showMessageDialog(null, "Operacao concluida!");
                     }
                 } catch (IOException ex) {
@@ -167,7 +173,7 @@ public class OperationSelector extends JFrame {
                     if (returnValue == FileSelector.APPROVE_OPTION) {
                         File[] selectedFiles = fileSelector.getSelectedFiles();
                         JOptionPane.showMessageDialog(null, "Operacao iniciada! Pode demorar um pouco!");
-                        PDF.OCRImage(selectedFiles, selectedFiles[0].getAbsolutePath());
+                        PDF.OCRImage(selectedFiles);
                         JOptionPane.showMessageDialog(null, "Operacao concluida!");
                     }
                 } catch (IOException ex) {

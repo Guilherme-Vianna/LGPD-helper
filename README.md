@@ -7,5 +7,4 @@ Download JRE
 https://drive.google.com/file/d/1oo9CLZHm-q91hK1M4WvdrNQ4BEcyo0pg/view?usp=drive_link
 
 Download Last Version Here
-https://drive.google.com/file/d/1m-4XyrQSuv-ouGINgDbm2GsHLGyr3fwB/view?usp=sharing
-
+https://drive.google.com/file/d/171TXcanY2cMeoUb5wPhIR6x-4PJf3Bmx/view?usp=sharing

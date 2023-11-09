@@ -8,10 +8,6 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
-/**
- *
- * @author User
- */
 public class FileSelector extends JFileChooser{
     FileFilter filter;
     

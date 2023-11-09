@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.soluctiontree.lgpd.helper;
 
 import java.awt.image.BufferedImage;
@@ -16,13 +12,9 @@ import com.itextpdf.pdfcleanup.autosweep.RegexBasedCleanupStrategy;
 
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.pdfcleanup.PdfCleaner;
-import com.itextpdf.pdfocr.OcrPdfCreator;
-import com.itextpdf.pdfocr.tesseract4.Tesseract4LibOcrEngine;
-import com.itextpdf.pdfocr.tesseract4.Tesseract4OcrEngineProperties;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*; 
 import java.util.regex.Matcher;
 
 import org.apache.pdfbox.Loader;
@@ -37,12 +29,7 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import javax.imageio.ImageIO;
 import java.io.File;
-import java.util.List;
 
-/**
- *
- * @author User
- */
 public class PDF {
     public static void RedateRegex(String path, String regex) throws IOException{
         String outputPath = path.substring(0, path.lastIndexOf('.')) + "_redate.pdf";
@@ -82,23 +69,6 @@ public class PDF {
         String outputPath = path.substring(0, path.lastIndexOf('.')) + "_redate_.pdf";
         File renamedFile = new File(outputPath);
         new File(outputPath).renameTo(renamedFile);
-    }
-    
-    public static void OCRImage(File[] images) throws FileNotFoundException, IOException{
-        List<File> imagesList = Arrays.asList(images);
-
-        Tesseract4OcrEngineProperties tesseract4OcrEngineProperties = new Tesseract4OcrEngineProperties();
-        tesseract4OcrEngineProperties.setPathToTessData(new File("C:\\Documents\\OCRData"));
-
-        OCRProgressBar progressBar = new OCRProgressBar(imagesList.size());
-        for (int i = 0; i < imagesList.size(); i++) {
-            File image = imagesList.get(i);
-            String outputPath = image.getPath() + i + "_ocr.pdf"; 
-            PdfWriter writer = new PdfWriter(outputPath); 
-            OcrPdfCreator ocrPdfCreator = new OcrPdfCreator(new Tesseract4LibOcrEngine(tesseract4OcrEngineProperties));
-            ocrPdfCreator.createPdf(Arrays.asList(image), writer).close();
-            progressBar.increment();
-        }
     }
     
     public static void PDFToImage(String path) throws IOException {

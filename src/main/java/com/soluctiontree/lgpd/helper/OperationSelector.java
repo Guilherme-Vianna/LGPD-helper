@@ -12,9 +12,6 @@ import java.util.logging.Logger;
 public class OperationSelector extends JFrame {
     private final JButton rDocx = new JButton("Censurar DOCX");
     private final JButton rPDF = new JButton("Censurar PDF");
-    private final JButton oImg = new JButton("PDF para Imagem");
-    private final JButton rRegex = new JButton("Censurar Regex");
-    private final JButton pdfOcr = new JButton("OCR Imagem");
     private Container container = null;
     private JPanel painel = null;
     private JProgressBar progressBar;
@@ -34,10 +31,7 @@ public class OperationSelector extends JFrame {
         painel = new JPanel();
         painel.add(rDocx);
         painel.add(rPDF);
-        painel.add(oImg);
-        painel.add(rRegex);
-        painel.add(pdfOcr);
-        painel.setBounds(150, 0, 500, 500);
+        painel.setBounds(150, 0, 500, 100);
         
         container.add(painel);
         
@@ -96,84 +90,6 @@ public class OperationSelector extends JFrame {
                         }
                         
                         progressBar.setValue(selectedFiles.length);
-                        JOptionPane.showMessageDialog(null, "Operacao concluida!");
-                    }
-                } catch (IOException ex) {
-                    Logger.getLogger(OperationSelector.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-        
-        oImg.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    System.out.println("Openning File Selector");
-                    FileSelector fileSelector = new FileSelector(".pdf");
-                    int returnValue = fileSelector.showOpenDialog(null);
-
-                    if (returnValue == FileSelector.APPROVE_OPTION) {
-                        File[] selectedFiles = fileSelector.getSelectedFiles();
-                        JOptionPane.showMessageDialog(null, "Operacao iniciada! Aguarde a mensagem de termino");
-                        
-                        progressBar.setValue(0);
-                        progressBar.setMaximum(selectedFiles.length);
-                        
-                        for (int i = 0; i < selectedFiles.length; i++) {
-                            PDF.PDFToImage(selectedFiles[i].getAbsolutePath());
-                            progressBar.setValue(i);
-                        }
-                        
-                        progressBar.setValue(selectedFiles.length);
-                        JOptionPane.showMessageDialog(null, "Operacao concluida!");
-                    }
-                } catch (IOException ex) {
-                    Logger.getLogger(OperationSelector.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-        
-        rRegex.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    System.out.println("Openning File Selector");
-                    FileSelector fileSelector = new FileSelector(".docx");
-                    int returnValue = fileSelector.showOpenDialog(null);
-
-                    if (returnValue == FileSelector.APPROVE_OPTION) {
-                        File[] selectedFiles = fileSelector.getSelectedFiles();
-                        JOptionPane.showMessageDialog(null, "Operacao iniciada! Aguarde a mensagem de termino");
-                        
-                        progressBar.setValue(0);
-                        progressBar.setMaximum(selectedFiles.length);
-                        
-                        for (int i = 0; i <= selectedFiles.length; i++) {
-                            PDF.RedateCPFAndRG((selectedFiles[i].getAbsolutePath()));
-                            progressBar.setValue(i);
-                        }
-                        
-                        progressBar.setValue(selectedFiles.length);
-                        JOptionPane.showMessageDialog(null, "Operacao concluida!");
-                    }
-                } catch (IOException ex) {
-                    Logger.getLogger(OperationSelector.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-        
-        pdfOcr.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    System.out.println("Openning File Selector");
-                    FileSelector fileSelector = new FileSelector(".img");
-                    int returnValue = fileSelector.showOpenDialog(null);
-
-                    if (returnValue == FileSelector.APPROVE_OPTION) {
-                        File[] selectedFiles = fileSelector.getSelectedFiles();
-                        JOptionPane.showMessageDialog(null, "Operacao iniciada! Pode demorar um pouco!");
-                        PDF.OCRImage(selectedFiles);
                         JOptionPane.showMessageDialog(null, "Operacao concluida!");
                     }
                 } catch (IOException ex) {
